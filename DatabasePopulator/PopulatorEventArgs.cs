@@ -17,19 +17,6 @@ namespace FileDatabase
 			}
 		}
 
-		private string database;
-		public string Database
-		{
-			get
-			{
-				return database;
-			}
-			set
-			{
-				database = value;
-			}
-		}
-
 		private int percent;
 		public int Percent
 		{
@@ -56,24 +43,21 @@ namespace FileDatabase
 			}
 		}
 
-		public PopulatorEventArgs(string path, string database)
+		public PopulatorEventArgs(string path)
 		{
 			this.path = path;
-			this.database = database;
 			this.percent = 0;
 		}
 
-		public PopulatorEventArgs(string path, string database, int percent)
+		public PopulatorEventArgs(string path, int percent)
 		{
 			this.path = path;
-			this.database = database;
 			this.percent = percent;
 		}
 
-		public PopulatorEventArgs(string path, string database, int percent, int count)
+		public PopulatorEventArgs(string path, int percent, int count)
 		{
 			this.path = path;
-			this.database = database;
 			this.percent = percent;
 			this.count = count;
 		}
