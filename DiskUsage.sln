@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskUsage", "DiskUsage\DiskUsage.csproj", "{16350AA7-AAA0-4F57-92AF-BF2E841A3A6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilesystemUtilities", "DatabasePopulator\FilesystemUtilities.csproj", "{80843E91-793E-42AE-887A-C7807039C20D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilesystemUtilities", "FilesystemUtilities\FilesystemUtilities.csproj", "{80843E91-793E-42AE-887A-C7807039C20D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -18,7 +18,7 @@ namespace FilesystemUtilities
 	{
 		#region Private Members
 		/// <summary>
-		/// A <see cref="Stopwatch"> to time the folder processing.
+		/// A <see cref="Stopwatch"/> to time the folder processing.
 		/// </summary>
 		private Stopwatch sw;
 
@@ -76,7 +76,7 @@ namespace FilesystemUtilities
 		}
 		#endregion
 
-#region Private Methods
+		#region Private Methods
 		/// <summary>
 		/// A private method to initialize the <see cref="FolderProcessor"/>.
 		/// </summary>
@@ -168,7 +168,7 @@ namespace FilesystemUtilities
 		}
 #endregion
 
-#region Public Methods
+		#region Public Methods
 		/// <summary>
 		/// A public method to start the scan.
 		/// </summary>

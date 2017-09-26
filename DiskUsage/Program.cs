@@ -28,8 +28,6 @@ namespace DiskUsage
 				dbp.ScanningStarted += Dbp_ScanningStarted;
 				dbp.ScanningDone += Dbp_ScanningDone;
 				dbp.StartScanning();
-				Console.WriteLine(string.Format("Queue Count: {0}", dbp.CurrentQueueCount));
-				Console.WriteLine("Done scanning");
 				Console.WriteLine(dbp.GetReport(20));
 				Console.ReadKey();
 			}
@@ -44,6 +42,7 @@ namespace DiskUsage
 		private static void Dbp_ScanningDone()
 		{
 			Console.WriteLine("Scanning done.");
+//			Console.WriteLine(string.Format("Queue Count: {0}", dbp.CurrentQueueCount));
 		}
 
 		private static void Dbp_ScanningStarted()
