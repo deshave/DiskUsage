@@ -24,13 +24,28 @@ namespace FilesystemUtilities
 		/// A <see cref="bool"/> flag for cancelling the processing.
 		/// </summary>
 		private bool CancelRequested;
+
+		/// <summary>
+		/// A <see cref="bool"/> flag indicating whether the object is scanning directories or idle.
+		/// </summary>
+		private bool currentlyscanning;
+		/// <summary>
+		/// A <see cref="bool"/> flag indicating whether the object is scanning directories or idle.
+		/// </summary>
+		public bool CurrentlyScanning
+		{
+			get
+			{
+				return currentlyscanning;
+			}
+		}
 		#endregion
 
 		#region Public Members
 		/// <summary>
 		/// A <see cref="ConcurrentDictionary{TKey, TValue}"/> to hold directory names as a <see cref="string"/> and aggregated file sizes as a <see cref="long"/>.
 		/// </summary>
-		public ConcurrentDictionary<string, long> Directories;
+		private ConcurrentDictionary<string, long> Directories;
 
 		/// <summary>
 		/// Current count of items in the Directories <see cref="ConcurrentDictionary{TKey, TValue}"/>.
@@ -46,10 +61,26 @@ namespace FilesystemUtilities
 		/// <summary>
 		/// Gets or sets the starting root of the <see cref="DirectoryProcessor"/>.
 		/// </summary>
+		/// <exception cref="ArgumentException">The value passed is null</exception>
+		/// <exception cref="DirectoryNotFoundException">The directory could not be found.</exception>
 		public string Root
 		{
-			get;
-			set;
+			get
+			{
+				return Root;
+			}
+			set
+			{
+				if (value == null)
+				{
+					throw new ArgumentNullException("Root");
+				}
+				if (!Directory.Exists(value))
+				{
+					throw new DirectoryNotFoundException(string.Format("The request directory, \"{0}\", could not be accessed.", value));
+				}
+				Root = value;
+			}
 		}
 
 		/// <summary>
@@ -91,6 +122,7 @@ namespace FilesystemUtilities
 		private void init()
 		{
 			this.CancelRequested = false;
+			this.currentlyscanning = false;
 			Directories = new ConcurrentDictionary<string, long>();
 			sw = new Stopwatch();
 		}
@@ -213,6 +245,7 @@ namespace FilesystemUtilities
 		/// </summary>
 		private void OnScanningStarted()
 		{
+			this.currentlyscanning = true;
 			sw.Restart();
 			ScanningStarted?.Invoke();
 		}
@@ -222,6 +255,7 @@ namespace FilesystemUtilities
 		/// </summary>
 		private void OnScanningDone()
 		{
+			this.currentlyscanning = false;
 			sw.Stop();
 			CancelRequested = false;
 			ScanningDone?.Invoke();
