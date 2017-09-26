@@ -2,28 +2,41 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.IO;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 
-namespace FileDatabase
+namespace FilesystemUtilities
 {
-	public delegate void PopulatorEventHandler(object sender, PopulatorEventArgs e);
-
-	public class DatabasePopulator
+	/// <summary>
+	/// This class provides access to process a folder and its subfolders.
+	/// </summary>
+	public class FolderProcessor
 	{
 		#region Private Members
+		/// <summary>
+		/// A <see cref="Stopwatch"> to time the folder processing.
+		/// </summary>
 		private Stopwatch sw;
+
+		/// <summary>
+		/// A private property to hold the value for cancelling the processing.
+		/// </summary>
+		private bool CancelRequested;
 		#endregion
 
 		#region Public Members
+		/// <summary>
+		/// A <see href="ConcurrentDictionary"/> to hold folder names as a <see cref="string"/> and aggregated file sizes as a <see cref="long"/>.
+		/// </summary>
 		public ConcurrentDictionary<string, long> Folders;
 
+		/// <summary>
+		/// A public method to get the current count of items in the Folders <see cref="ConcurrentDictionary{TKey, TValue}"/>.
+		/// </summary>
 		public int CurrentQueueCount
 		{
 			get
@@ -32,18 +45,31 @@ namespace FileDatabase
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the starting root of the <see cref="FolderProcessor"/>.
+		/// </summary>
 		public string Root
 		{
 			get;
 			set;
 		}
 
-		public event PopulatorEventHandler ScanningStarted;
-		public event PopulatorEventHandler ScanningDone;
+		/// <summary>
+		/// A custom event action to handle the start of the processing.
+		/// </summary>
+		public event Action ScanningStarted;
+		/// <summary>
+		/// A custom event action to handle the end of the processing.
+		/// </summary>
+		public event Action ScanningDone;
 		#endregion
 
 		#region Constructors
-		public DatabasePopulator(string path)
+		/// <summary>
+		/// Default constructor.
+		/// </summary>
+		/// <param name="path">The root of the <see cref="FolderProcessor"/></param>
+		public FolderProcessor(string path)
 		{
 			Root = path;
 			init();
@@ -51,19 +77,31 @@ namespace FileDatabase
 		#endregion
 
 #region Private Methods
+		/// <summary>
+		/// A private method to initialize the <see cref="FolderProcessor"/>.
+		/// </summary>
 		private void init()
 		{
 #if DEBUG
 			Debug.WriteLine("Initializing...");
 #endif
+			this.CancelRequested = false;
 			Folders = new ConcurrentDictionary<string, long>();
 			sw = new Stopwatch();
 		}
 
-		private void ProcessFolder(IEnumerable<FileSystemInfo> fsi, PopulatorEventArgs pa)
+		/// <summary>
+		/// A recursive method to walk down the folder tree, processing each subfolder as it is encountered.
+		/// </summary>
+		/// <param name="fsi">An <see cref="IEnumerable{FileSystemInfo}"/> object containing the starting point of the folder processing for this iteration.</param>
+		private void ProcessFolder(IEnumerable<FileSystemInfo> fsi)
 		{
 			foreach (FileSystemInfo info in fsi)
 			{
+				if (CancelRequested)
+				{
+					return;
+				}
 				// We skip reparse points 
 				if ((info.Attributes & FileAttributes.ReparsePoint) == FileAttributes.ReparsePoint)
 				{
@@ -86,14 +124,10 @@ namespace FileDatabase
 							existingval = 0;
 							return existingval;
 						});
-						//ProcessFolder(dirInfo.GetFileSystemInfos(), pa);
 						try
 						{
 							var test = dirInfo.GetFileSystemInfos();
-							//							Thread myNewThread = new Thread(() => ProcessFolder(test, pa));
-							//							myNewThread.Start();
-							//Parallel.Invoke(() => ProcessFolder(test, pa));
-							Task tsk = new Task(() => ProcessFolder(test, pa));
+							Task tsk = new Task(() => ProcessFolder(test));
 							tsk.Start();
 							tsk.Wait();
 						}
@@ -130,34 +164,42 @@ namespace FileDatabase
 						});
 					}
 				}
-			//	FillQueueWorker.ReportProgress(0, pa);
 			}
 		}
-
 #endregion
 
 #region Public Methods
+		/// <summary>
+		/// A public method to start the scan.
+		/// </summary>
 		public void StartScanning()
 		{
-			PopulatorEventArgs pa = new PopulatorEventArgs(this.Root);
-			var di = new DirectoryInfo(pa.Path);
+			var di = new DirectoryInfo(this.Root);
 			Folders.Clear();
-			OnScanningStarted(this, pa);
-			ProcessFolder(di.GetFileSystemInfos(), pa);
-			OnScanningDone(this, null);
+			OnScanningStarted();
+			ProcessFolder(di.GetFileSystemInfos());
+			OnScanningDone();
 		}
 
+		/// <summary>
+		/// A public method to stop the scan.
+		/// </summary>
 		public void StopScanning()
 		{
+			CancelRequested = true;
 		}
 
-		public string GetReport()
+		/// <summary>
+		/// Creates a formatted report of the top folders and their file sizes.
+		/// </summary>
+		/// <returns>A <see cref="string"/> containing the formatted report.</returns>
+		/// <param name="count">An <see cref="int"/> containing the number of requested folders for the report.</param>
+		public string GetReport(int count)
 		{
 			StringBuilder sb = new StringBuilder();
 			var folders = Folders.ToArray();
 			var sorted = folders.OrderBy(item => item.Value).ToArray();
-			//var foo = folders[0].Key
-			for (var i = sorted.Length; i > (sorted.Length - 20 > 0 ? sorted.Length - 20: 0); i--)
+			for (var i = sorted.Length; i > (sorted.Length - count > 0 ? sorted.Length - count: 0); i--)
 			{
 				sb.AppendLine(string.Format("{0}: {1}", sorted[i-1].Key, Helpers.StringUtilities.GetBytesReadable(sorted[i-1].Value)));
 			}
@@ -167,16 +209,23 @@ namespace FileDatabase
 		#endregion
 
 		#region Events
-		private void OnScanningStarted(object sender, PopulatorEventArgs e)
+		/// <summary>
+		/// Fired when the scan starts.
+		/// </summary>
+		private void OnScanningStarted()
 		{
 			sw.Restart();
-			ScanningStarted?.Invoke(sender, e);
+			ScanningStarted?.Invoke();
 		}
 
-		private void OnScanningDone(object sender, PopulatorEventArgs e)
+		/// <summary>
+		/// Fired when the scan ends.
+		/// </summary>
+		private void OnScanningDone()
 		{
 			sw.Stop();
-			ScanningDone?.Invoke(sender, e);
+			CancelRequested = false;
+			ScanningDone?.Invoke();
 		}
 		#endregion
 	}

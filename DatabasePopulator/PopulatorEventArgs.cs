@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileDatabase
+namespace FilesystemUtilities
 {
 	public class PopulatorEventArgs : EventArgs
 	{
