@@ -9,44 +9,47 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 
+/// <summary>
+/// Utilities for quickly analyzing large lists of directories and files.
+/// </summary>
 namespace FilesystemUtilities
 {
 	/// <summary>
-	/// This class provides access to process a folder and its subfolders.
+	/// This class provides access to process a directory and its child directories and formats a report of the directories and their aggregated sizes.
 	/// </summary>
-	public class FolderProcessor
+	public class DirectoryProcessor
 	{
 		#region Private Members
 		/// <summary>
-		/// A <see cref="Stopwatch"/> to time the folder processing.
+		/// A <see cref="Stopwatch"/> to time the directory processing.
 		/// </summary>
 		private Stopwatch sw;
 
 		/// <summary>
-		/// A private property to hold the value for cancelling the processing.
+		/// A <see cref="bool"/> flag for cancelling the processing.
 		/// </summary>
 		private bool CancelRequested;
 		#endregion
 
 		#region Public Members
 		/// <summary>
-		/// A <see href="ConcurrentDictionary"/> to hold folder names as a <see cref="string"/> and aggregated file sizes as a <see cref="long"/>.
+		/// A <see cref="ConcurrentDictionary{TKey, TValue}"/> to hold directory names as a <see cref="string"/> and aggregated file sizes as a <see cref="long"/>.
 		/// </summary>
-		public ConcurrentDictionary<string, long> Folders;
+		public ConcurrentDictionary<string, long> Directories;
 
 		/// <summary>
-		/// A public method to get the current count of items in the Folders <see cref="ConcurrentDictionary{TKey, TValue}"/>.
+		/// Current count of items in the Directories <see cref="ConcurrentDictionary{TKey, TValue}"/>.
 		/// </summary>
 		public int CurrentQueueCount
 		{
 			get
 			{
-				return Folders.Count;
+				return Directories.Count;
 			}
 		}
 
 		/// <summary>
-		/// Gets or sets the starting root of the <see cref="FolderProcessor"/>.
+		/// Gets or sets the starting root of the <see cref="DirectoryProcessor"/>.
 		/// </summary>
 		public string Root
 		{
@@ -55,22 +58,32 @@ namespace FilesystemUtilities
 		}
 
 		/// <summary>
-		/// A custom event action to handle the start of the processing.
+		/// Occurs when the processing begins.
 		/// </summary>
 		public event Action ScanningStarted;
 		/// <summary>
-		/// A custom event action to handle the end of the processing.
+		/// Occurs when the processing ends.
 		/// </summary>
 		public event Action ScanningDone;
 		#endregion
 
 		#region Constructors
 		/// <summary>
-		/// Default constructor.
+		/// Initializes a new instance of the <see cref="DirectoryProcessor"/> class, and sets the <see cref="Root"/> property to the specified value.
 		/// </summary>
-		/// <param name="path">The root of the <see cref="FolderProcessor"/></param>
-		public FolderProcessor(string path)
+		/// <param name="path">The path location to start the processing. Must be a valid filesystem path.</param>
+		/// <exception cref="ArgumentException">The value of the <c>path</c> parameter is null</exception>
+		/// <exception cref="DirectoryNotFoundException">The value of the <c>path</c> parameter could not be found.</exception>
+		public DirectoryProcessor(string path)
 		{
+			if (path == null)
+			{
+				throw new ArgumentException("Method was passed a null value.", "path");
+			}
+			if (!Directory.Exists(path))
+			{
+				throw new DirectoryNotFoundException(string.Format("The specified path, \"{0}\", could not be accessed.", path));
+			}
 			Root = path;
 			init();
 		}
@@ -78,7 +91,7 @@ namespace FilesystemUtilities
 
 		#region Private Methods
 		/// <summary>
-		/// A private method to initialize the <see cref="FolderProcessor"/>.
+		/// Initializes the <see cref="DirectoryProcessor"/> object.
 		/// </summary>
 		private void init()
 		{
@@ -86,15 +99,15 @@ namespace FilesystemUtilities
 			Debug.WriteLine("Initializing...");
 #endif
 			this.CancelRequested = false;
-			Folders = new ConcurrentDictionary<string, long>();
+			Directories = new ConcurrentDictionary<string, long>();
 			sw = new Stopwatch();
 		}
 
 		/// <summary>
-		/// A recursive method to walk down the folder tree, processing each subfolder as it is encountered.
+		/// Walks down the directory tree, processing each child directory as it is encountered.
 		/// </summary>
-		/// <param name="fsi">An <see cref="IEnumerable{FileSystemInfo}"/> object containing the starting point of the folder processing for this iteration.</param>
-		private void ProcessFolder(IEnumerable<FileSystemInfo> fsi)
+		/// <param name="fsi">An <see cref="IEnumerable{FileSystemInfo}"/> object containing the starting point of the directory processing for this iteration.</param>
+		private void ProcessDirectory(IEnumerable<FileSystemInfo> fsi)
 		{
 			foreach (FileSystemInfo info in fsi)
 			{
@@ -119,7 +132,7 @@ namespace FilesystemUtilities
 						Debug.WriteLine(string.Format("Descending into {0}", info.FullName));
 #endif
 
-						Folders.AddOrUpdate(info.FullName, 0, (key, existingval) =>
+						Directories.AddOrUpdate(info.FullName, 0, (key, existingval) =>
 						{
 							existingval = 0;
 							return existingval;
@@ -127,7 +140,7 @@ namespace FilesystemUtilities
 						try
 						{
 							var test = dirInfo.GetFileSystemInfos();
-							Task tsk = new Task(() => ProcessFolder(test));
+							Task tsk = new Task(() => ProcessDirectory(test));
 							tsk.Start();
 							tsk.Wait();
 						}
@@ -157,7 +170,7 @@ namespace FilesystemUtilities
 					var file = info as FileInfo;
 					if (file != null)
 					{
-						Folders.AddOrUpdate(file.DirectoryName, 0, (key, existingval) =>
+						Directories.AddOrUpdate(file.DirectoryName, 0, (key, existingval) =>
 						{
 							existingval += file.Length;
 							return existingval;
@@ -170,19 +183,19 @@ namespace FilesystemUtilities
 
 		#region Public Methods
 		/// <summary>
-		/// A public method to start the scan.
+		/// Starts the scan.
 		/// </summary>
 		public void StartScanning()
 		{
 			var di = new DirectoryInfo(this.Root);
-			Folders.Clear();
+			Directories.Clear();
 			OnScanningStarted();
-			ProcessFolder(di.GetFileSystemInfos());
+			ProcessDirectory(di.GetFileSystemInfos());
 			OnScanningDone();
 		}
 
 		/// <summary>
-		/// A public method to stop the scan.
+		/// Stop the scans.
 		/// </summary>
 		public void StopScanning()
 		{
@@ -190,20 +203,20 @@ namespace FilesystemUtilities
 		}
 
 		/// <summary>
-		/// Creates a formatted report of the top folders and their file sizes.
+		/// Creates a formatted report of the top directories and their file sizes.
 		/// </summary>
 		/// <returns>A <see cref="string"/> containing the formatted report.</returns>
-		/// <param name="count">An <see cref="int"/> containing the number of requested folders for the report.</param>
+		/// <param name="count">An <see cref="int"/> containing the number of requested directories for the report.</param>
 		public string GetReport(int count)
 		{
 			StringBuilder sb = new StringBuilder();
-			var folders = Folders.ToArray();
-			var sorted = folders.OrderBy(item => item.Value).ToArray();
+			var directories = Directories.ToArray();
+			var sorted = directories.OrderBy(item => item.Value).ToArray();
 			for (var i = sorted.Length; i > (sorted.Length - count > 0 ? sorted.Length - count: 0); i--)
 			{
 				sb.AppendLine(string.Format("{0}: {1}", sorted[i-1].Key, Helpers.StringUtilities.GetBytesReadable(sorted[i-1].Value)));
 			}
-			sb.AppendLine(string.Format("{0} folders scanned in {1}", Folders.Count, sw.Elapsed.ToString(@"hh\:mm\:ss")));
+			sb.AppendLine(string.Format("{0} directories scanned in {1}", Directories.Count, sw.Elapsed.ToString(@"hh\:mm\:ss")));
 			return sb.ToString();
 		}
 		#endregion

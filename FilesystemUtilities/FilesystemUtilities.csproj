@@ -7,8 +7,8 @@
     <ProjectGuid>{80843E91-793E-42AE-887A-C7807039C20D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DatabasePopulator</RootNamespace>
-    <AssemblyName>DatabasePopulator</AssemblyName>
+    <RootNamespace>FileUtilities</RootNamespace>
+    <AssemblyName>FileUtilities</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -24,7 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
-    <DocumentationFile>bin\Debug\DatabasePopulator.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\FileUtilities.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,7 +60,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FolderProcessor.cs" />
+    <Compile Include="DirectoryProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

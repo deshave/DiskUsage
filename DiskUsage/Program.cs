@@ -3,12 +3,11 @@
 using System;
 using System.Diagnostics;
 
-
 namespace DiskUsage
 {
 	class Program
 	{
-		static private FilesystemUtilities.FolderProcessor dbp;
+		static private FilesystemUtilities.DirectoryProcessor dbp;
 
 		static void Main(string[] args)
 		{
@@ -24,7 +23,7 @@ namespace DiskUsage
 			}
 			try
 			{
-				dbp = new FilesystemUtilities.FolderProcessor(path);
+				dbp = new FilesystemUtilities.DirectoryProcessor(path);
 				dbp.ScanningStarted += Dbp_ScanningStarted;
 				dbp.ScanningDone += Dbp_ScanningDone;
 				dbp.StartScanning();
@@ -35,14 +34,12 @@ namespace DiskUsage
 			{
 				Debug.Write(ex.StackTrace);
 				return;
-				//throw new Exception(ex.Message, ex);
 			}
 		}
 
 		private static void Dbp_ScanningDone()
 		{
 			Console.WriteLine("Scanning done.");
-//			Console.WriteLine(string.Format("Queue Count: {0}", dbp.CurrentQueueCount));
 		}
 
 		private static void Dbp_ScanningStarted()
