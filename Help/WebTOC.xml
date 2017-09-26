@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpTOC>
+
+  <HelpTOCNode Id="8627e9a0-c4b6-4393-a5fc-fc8e57a856d5" Title="FilesystemUtilities" Url="html/b326a517-ab78-ec35-7e04-165892c04d30.htm">
+    <HelpTOCNode Id="25e14570-1008-471f-be64-302c6aa4bff6" Title="DirectoryProcessor Class" Url="html/61120604-287e-69b9-4314-40d839df9f10.htm">
+      <HelpTOCNode Title="DirectoryProcessor Constructor " Url="html/400abf3f-946a-413f-d9bf-7ed5a9df7149.htm" />
+      <HelpTOCNode Id="4a5a0aa7-588f-433a-a1a0-bf1abc6decf4" Title="DirectoryProcessor Properties" Url="html/1281b2fe-5ece-5dc0-b100-25e7de155078.htm">
+        <HelpTOCNode Title="CurrentQueueCount Property " Url="html/c7e22aa7-3efe-2ac7-248a-e4fa6c852f80.htm" />
+        <HelpTOCNode Title="Root Property " Url="html/1d4d5963-a385-96cb-7118-f1aa8f5dbd8a.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="8ef81f75-9bce-49bd-b255-03bc64f58163" Title="DirectoryProcessor Methods" Url="html/7329e04c-3dab-b69e-b171-2cf2f9eb5acc.htm">
+        <HelpTOCNode Title="GetReport Method " Url="html/c03f4759-a18f-654d-26e0-f7583852c4bb.htm" />
+        <HelpTOCNode Title="StartScanning Method " Url="html/f0f3f8d6-aee2-29b0-b384-6d744a9524bc.htm" />
+        <HelpTOCNode Title="StopScanning Method " Url="html/d154f862-a689-eff1-15b4-79d0b993390f.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="7d2004bd-30fd-4c63-ae77-df9eff1d5b45" Title="DirectoryProcessor Events" Url="html/289226c4-7268-8df9-45d3-fa44f2822d29.htm">
+        <HelpTOCNode Title="ScanningDone Event" Url="html/7c9e97c9-d7e9-cc8a-4a9e-8231a512322b.htm" />
+        <HelpTOCNode Title="ScanningStarted Event" Url="html/89783ea9-b0c6-77a1-f2f0-ad07952e39f8.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="221e6883-881e-447f-84f8-9caaef97dffb" Title="DirectoryProcessor Fields" Url="html/c3238a66-ea06-e049-d990-6ce6d8d61236.htm">
+        <HelpTOCNode Title="Directories Field" Url="html/05667614-0c4e-3f06-f33a-d3033aea03c3.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+</HelpTOC>

@@ -1,6 +1,4 @@
-﻿#undef DEBUG
-
-using System;
+﻿using System;
 using System.Diagnostics;
 
 namespace DiskUsage
@@ -30,9 +28,9 @@ namespace DiskUsage
 				Console.WriteLine(dbp.GetReport(20));
 				Console.ReadKey();
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
-				Debug.Write(ex.StackTrace);
+				Console.WriteLine("An unexpected error occurred.");
 				return;
 			}
 		}

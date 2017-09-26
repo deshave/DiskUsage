@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpKI>
+  <HelpKINode Title="CurrentQueueCount property" Url="html/c7e22aa7-3efe-2ac7-248a-e4fa6c852f80.htm" />
+  <HelpKINode Title="Directories field" Url="html/05667614-0c4e-3f06-f33a-d3033aea03c3.htm" />
+  <HelpKINode Title="DirectoryProcessor class">
+    <HelpKINode Title="DirectoryProcessor Class" Url="html/61120604-287e-69b9-4314-40d839df9f10.htm" />
+    <HelpKINode Title="about DirectoryProcessor class" Url="html/61120604-287e-69b9-4314-40d839df9f10.htm" />
+    <HelpKINode Title="constructor" Url="html/400abf3f-946a-413f-d9bf-7ed5a9df7149.htm" />
+    <HelpKINode Title="events" Url="html/289226c4-7268-8df9-45d3-fa44f2822d29.htm" />
+    <HelpKINode Title="fields" Url="html/c3238a66-ea06-e049-d990-6ce6d8d61236.htm" />
+    <HelpKINode Title="methods" Url="html/7329e04c-3dab-b69e-b171-2cf2f9eb5acc.htm" />
+    <HelpKINode Title="properties" Url="html/1281b2fe-5ece-5dc0-b100-25e7de155078.htm" />
+  </HelpKINode>
+  <HelpKINode Title="DirectoryProcessor.CurrentQueueCount property" Url="html/c7e22aa7-3efe-2ac7-248a-e4fa6c852f80.htm" />
+  <HelpKINode Title="DirectoryProcessor.Directories field" Url="html/05667614-0c4e-3f06-f33a-d3033aea03c3.htm" />
+  <HelpKINode Title="DirectoryProcessor.DirectoryProcessor constructor" Url="html/400abf3f-946a-413f-d9bf-7ed5a9df7149.htm" />
+  <HelpKINode Title="DirectoryProcessor.GetReport method" Url="html/c03f4759-a18f-654d-26e0-f7583852c4bb.htm" />
+  <HelpKINode Title="DirectoryProcessor.Root property" Url="html/1d4d5963-a385-96cb-7118-f1aa8f5dbd8a.htm" />
+  <HelpKINode Title="DirectoryProcessor.ScanningDone event" Url="html/7c9e97c9-d7e9-cc8a-4a9e-8231a512322b.htm" />
+  <HelpKINode Title="DirectoryProcessor.ScanningStarted event" Url="html/89783ea9-b0c6-77a1-f2f0-ad07952e39f8.htm" />
+  <HelpKINode Title="DirectoryProcessor.StartScanning method" Url="html/f0f3f8d6-aee2-29b0-b384-6d744a9524bc.htm" />
+  <HelpKINode Title="DirectoryProcessor.StopScanning method" Url="html/d154f862-a689-eff1-15b4-79d0b993390f.htm" />
+  <HelpKINode Title="FilesystemUtilities namespace" Url="html/b326a517-ab78-ec35-7e04-165892c04d30.htm" />
+  <HelpKINode Title="FilesystemUtilities.DirectoryProcessor class" Url="html/61120604-287e-69b9-4314-40d839df9f10.htm" />
+  <HelpKINode Title="GetReport method" Url="html/c03f4759-a18f-654d-26e0-f7583852c4bb.htm" />
+  <HelpKINode Title="Root property" Url="html/1d4d5963-a385-96cb-7118-f1aa8f5dbd8a.htm" />
+  <HelpKINode Title="ScanningDone event" Url="html/7c9e97c9-d7e9-cc8a-4a9e-8231a512322b.htm" />
+  <HelpKINode Title="ScanningStarted event" Url="html/89783ea9-b0c6-77a1-f2f0-ad07952e39f8.htm" />
+  <HelpKINode Title="StartScanning method" Url="html/f0f3f8d6-aee2-29b0-b384-6d744a9524bc.htm" />
+  <HelpKINode Title="StopScanning method" Url="html/d154f862-a689-eff1-15b4-79d0b993390f.htm" />
+</HelpKI>

@@ -1,6 +1,4 @@
-﻿#undef DEBUG
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
@@ -9,9 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 
-/// <summary>
-/// Utilities for quickly analyzing large lists of directories and files.
-/// </summary>
 namespace FilesystemUtilities
 {
 	/// <summary>
@@ -95,9 +90,6 @@ namespace FilesystemUtilities
 		/// </summary>
 		private void init()
 		{
-#if DEBUG
-			Debug.WriteLine("Initializing...");
-#endif
 			this.CancelRequested = false;
 			Directories = new ConcurrentDictionary<string, long>();
 			sw = new Stopwatch();
@@ -118,8 +110,7 @@ namespace FilesystemUtilities
 				// We skip reparse points 
 				if ((info.Attributes & FileAttributes.ReparsePoint) == FileAttributes.ReparsePoint)
 				{
-					Debug.WriteLine(string.Format("{0} is a reparse point. Skipping.", info.FullName));
-					//break;
+					continue;
 				}
 
 				if ((info.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
@@ -128,10 +119,6 @@ namespace FilesystemUtilities
 					try
 					{
 						DirectoryInfo dirInfo = (DirectoryInfo)info;
-#if DEBUG
-						Debug.WriteLine(string.Format("Descending into {0}", info.FullName));
-#endif
-
 						Directories.AddOrUpdate(info.FullName, 0, (key, existingval) =>
 						{
 							existingval = 0;
@@ -151,11 +138,10 @@ namespace FilesystemUtilities
 					}
 					catch (UnauthorizedAccessException)
 					{
-						Debug.WriteLine(string.Format("{0} is inaccessible. Skipping.", info.FullName));
+						continue;
 					}
-					catch (Exception ex)
+					catch (Exception)
 					{
-						Debug.WriteLine(ex.StackTrace);
 						// Skipping any errors
 						// Really, we should catch each type of Exception - 
 						// this will catch -any- exception that occurs, 
